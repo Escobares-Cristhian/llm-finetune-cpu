@@ -1,0 +1,50 @@
+model:
+  model_id: Qwen/Qwen3.5-0.8B
+  trust_remote_code: true
+  max_length: 512
+  attn_implementation: null
+
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    # - gate_proj
+    # - up_proj
+    # - down_proj
+
+data:
+  manual_path: data/manual/manual.jsonl
+  augmented_path: data/augmented/augmented.jsonl
+  hard_test_path: data/hard_test/hard_test.jsonl
+  processed_dir: data/processed
+  include_manual_in_train: true
+  augmented_train_ratio: 0.80
+  augmented_val_ratio: 0.10
+  augmented_test_ratio: 0.10
+  seed: 42
+
+training:
+  output_dir: outputs/checkpoints
+  final_adapter_dir: outputs/final_adapter
+  metrics_dir: outputs/metrics
+  report_dir: reports/plots
+  num_train_epochs: 2.0
+  max_steps: -1
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  weight_decay: 0.0
+  warmup_ratio: 0.03
+  logging_steps: 1
+  eval_steps: 10
+  save_steps: 10
+  save_total_limit: 2
+  gradient_checkpointing: true
+  seed: 42

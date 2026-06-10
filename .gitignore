@@ -1,0 +1,25 @@
+# Virtual environments
+.venv/
+
+# Python bytecode and caches
+__pycache__/
+*.pyc
+
+# Test and lint caches
+.pytest_cache/
+.ruff_cache/
+
+# Python package metadata
+*.egg-info/
+
+# Generated outputs and reports
+outputs/
+reports/plots/*.png
+reports/smoke_plots/
+
+# Processed data
+data/processed/
+
+# Environment files
+*.env
+

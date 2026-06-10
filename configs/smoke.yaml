@@ -1,0 +1,44 @@
+model:
+  model_id: sshleifer/tiny-gpt2
+  trust_remote_code: false
+  max_length: 128
+  attn_implementation: null
+
+lora:
+  r: 4
+  alpha: 8
+  dropout: 0.05
+  bias: none
+  target_modules:
+    - c_attn
+
+data:
+  manual_path: data/manual/manual.jsonl
+  augmented_path: data/augmented/augmented.jsonl
+  hard_test_path: data/hard_test/hard_test.jsonl
+  processed_dir: data/processed
+  include_manual_in_train: true
+  augmented_train_ratio: 0.80
+  augmented_val_ratio: 0.10
+  augmented_test_ratio: 0.10
+  seed: 42
+
+training:
+  output_dir: outputs/smoke_checkpoints
+  final_adapter_dir: outputs/smoke_adapter
+  metrics_dir: outputs/smoke_metrics
+  report_dir: reports/smoke_plots
+  num_train_epochs: 1.0
+  max_steps: 2
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 1
+  learning_rate: 0.0002
+  weight_decay: 0.0
+  warmup_ratio: 0.0
+  logging_steps: 1
+  eval_steps: 1
+  save_steps: 1
+  save_total_limit: 1
+  gradient_checkpointing: false
+  seed: 42

@@ -1,0 +1,3 @@
+{"id":"hard-001","instruction":"Extract the action item from the message. If there is no action item, answer exactly: no action item.","input":"The dashboard was published yesterday and looks good.","output":"no action item","source":"hard_test"}
+{"id":"hard-002","instruction":"Classify the customer tone as positive, neutral, or negative.","input":"Great, another outage. Exactly what I needed today.","output":"negative","source":"hard_test"}
+{"id":"hard-003","instruction":"Rewrite the sentence in a concise professional tone.","input":"This is not technically broken, but it is weird enough that people will think it is broken.","output":"Although the feature is working, its behavior may confuse users.","source":"hard_test"}
