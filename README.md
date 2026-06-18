@@ -2,7 +2,7 @@
 
 Small, notebook-free repo for CPU-only LoRA fine-tuning of a Hugging Face causal language model.
 
-Default model: `Qwen/Qwen3-1.7B`.
+Default model: `Qwen/Qwen3-0.8B`.
 
 The repo intentionally separates three data groups:
 
@@ -11,6 +11,27 @@ The repo intentionally separates three data groups:
 - `data/hard_test/hard_test.jsonl`: hard edge cases used only after training for final metrics.
 
 The AI augmentation/generation step is intentionally **not** included.
+
+## Example: Finetuned vs Baseline
+
+The adapter shown in this example was finetuned using only **30 training examples**. The full training run took approximately **20 minutes** on a 2014 laptop equipped with **16 GB of DDR3 RAM** and an **Intel Core i7-4702MQ**, demonstrating that small LoRA experiments can be performed on modest, CPU-only hardware.
+
+As shown in `reports/Comparison_example_Finetuned-vs-Baseline.png`, running `make chat` lets you interact with the finetuned and baseline models side-by-side. The small baseline LLM often struggles to produce raw, valid JSON without Markdown wrapping, while the finetuned model responds using the exact compact format requested:
+
+![Interactive Model Comparison — Finetuned vs Baseline](reports/Comparison_example_Finetuned-vs-Baseline.png)
+
+*Figure: Interactive comparison between the finetuned adapter and the baseline model.*
+
+## Makefile usage
+
+For convenience, you can run tasks directly using the `Makefile` (which wraps the Docker commands and mounts necessary volumes, including `~/.cache` for models):
+
+- `make build`: Builds the Docker image.
+- `make train`: Runs the training pipeline using the default configuration.
+- `make evaluate`: Evaluates the existing trained adapter.
+- `make chat`: Starts an interactive REPL comparing the baseline model alongside your finetuned adapter (as shown in the example above).
+- `make test`: Runs `pytest`.
+- `make lint`: Runs `ruff check` on the source code.
 
 ## Data format
 
