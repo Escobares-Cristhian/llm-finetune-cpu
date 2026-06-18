@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from transformers import Trainer, TrainingArguments, set_seed
+from transformers import Trainer, TrainingArguments, set_seed, TrainerCallback
 
 from llm_finetune.config import AppConfig
 from llm_finetune.data import (
@@ -23,6 +23,16 @@ from llm_finetune.modeling import ModelFactory
 
 # CPU-only guard before Trainer/Accelerate initialize devices.
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+
+
+class PlottingCallback(TrainerCallback):
+    """Callback to update training and evaluation plots progressively during training."""
+    def __init__(self, report_dir: Path) -> None:
+        self.plotter = MetricsPlotter(report_dir)
+
+    def on_log(self, args: TrainingArguments, state: Any, control: Any, logs: dict[str, float] | None = None, **kwargs: Any) -> None:
+        self.plotter.plot_training_loss(state.log_history)
+        self.plotter.plot_eval_loss(state.log_history)
 
 
 class FineTuningRunner:
@@ -70,7 +80,6 @@ class FineTuningRunner:
     def _build_trainer(self, model: Any, tokenizer: Any, datasets: dict[str, Any]) -> Trainer:
         args = TrainingArguments(
             output_dir=str(self.config.training.output_dir),
-            overwrite_output_dir=True,
             num_train_epochs=self.config.training.num_train_epochs,
             max_steps=self.config.training.max_steps,
             per_device_train_batch_size=self.config.training.per_device_train_batch_size,
@@ -89,7 +98,6 @@ class FineTuningRunner:
             save_total_limit=self.config.training.save_total_limit,
             gradient_checkpointing=self.config.training.gradient_checkpointing,
             report_to="none",
-            use_cpu=True,
             fp16=False,
             bf16=False,
             optim="adamw_torch",
@@ -104,6 +112,7 @@ class FineTuningRunner:
             data_collator=CausalCollator(tokenizer),
             compute_metrics=CausalLMMetrics.compute,
             preprocess_logits_for_metrics=preprocess_logits_for_metrics,
+            callbacks=[PlottingCallback(self.config.training.report_dir)],
         )
 
     @staticmethod
@@ -132,7 +141,6 @@ class EvaluationRunner:
             output_dir=str(self.config.training.output_dir),
             per_device_eval_batch_size=self.config.training.per_device_eval_batch_size,
             report_to="none",
-            use_cpu=True,
             fp16=False,
             bf16=False,
             remove_unused_columns=False,

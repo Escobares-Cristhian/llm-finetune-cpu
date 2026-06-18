@@ -20,6 +20,8 @@ reports/smoke_plots/
 # Processed data
 data/processed/
 
+# Model weights cache
+.cache/
+
 # Environment files
 *.env
-

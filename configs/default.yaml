@@ -20,7 +20,7 @@ lora:
 
 data:
   manual_path: data/manual/manual.jsonl
-  augmented_path: data/augmented/augmented.jsonl
+  augmented_path: data/augmented/augmented_structured.jsonl
   hard_test_path: data/hard_test/hard_test.jsonl
   processed_dir: data/processed
   include_manual_in_train: true
